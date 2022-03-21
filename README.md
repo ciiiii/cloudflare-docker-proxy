@@ -21,6 +21,7 @@
      "docker.libcuda.so": "https://registry-1.docker.io",
      "quay.libcuda.so": "https://quay.io",
      "gcr.libcuda.so": "https://k8s.gcr.io",
+     "k8s-gcr.libcuda.so": "https://k8s.gcr.io",
      "ghcr.libcuda.so": "https://ghcr.io",
    };
    ```
