@@ -16,5 +16,12 @@ port = 8787
 local_protocol="http"
 upstream_protocol="https"
 
-[env.dev]
-vars={DEBUG=true, LOCAL_ADDRESS="http://192.168.50.160:8787", TARGET_UPSTREAM="https://registry-1.docker.io"}
+[vars]
+MODE="production"
+LOCAL_ADDRESS=""
+TARGET_UPSTREAM=""
+
+[env.dev.vars]
+MODE="debug"
+LOCAL_ADDRESS="http://192.168.50.160:8787"
+TARGET_UPSTREAM="https://registry-1.docker.io"
