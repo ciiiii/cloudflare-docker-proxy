@@ -25,32 +25,47 @@ function routeByHosts(host) {
 
 async function handleRequest(request) {
   const url = new URL(request.url);
-  if (url.pathname == "/v2/") {
-    const headers = new Headers();
-    if (MODE == "debug") {
-      headers.set(
-        "Www-Authenticate",
-        `Bearer realm="${LOCAL_ADDRESS}/v2/auth",service="cloudflare-docker-proxy"`
-      );
-    } else {
-      headers.set(
-        "Www-Authenticate",
-        `Bearer realm="https://${url.hostname}/v2/auth",service="cloudflare-docker-proxy"`
-      );
-    }
-    return new Response(JSON.stringify({ message: "UNAUTHORIZED" }), {
-      status: 401,
-      headers: headers,
-    });
-  }
   const upstream = routeByHosts(url.hostname);
   if (upstream === "") {
     return new Response(
       JSON.stringify({
         routes: routes,
-      })
+      }),
+      {
+        status: 404,
+      }
     );
   }
+  // check if need to authenticate
+  if (url.pathname == "/v2/") {
+    const newUrl = new URL(upstream + "/v2/");
+    const resp = await fetch(newUrl.toString(), {
+      method: "GET",
+      redirect: "follow",
+    });
+    if (resp.status === 200) {
+    } else if (resp.status === 401) {
+      const headers = new Headers();
+      if (MODE == "debug") {
+        headers.set(
+          "Www-Authenticate",
+          `Bearer realm="${LOCAL_ADDRESS}/v2/auth",service="cloudflare-docker-proxy"`
+        );
+      } else {
+        headers.set(
+          "Www-Authenticate",
+          `Bearer realm="https://${url.hostname}/v2/auth",service="cloudflare-docker-proxy"`
+        );
+      }
+      return new Response(JSON.stringify({ message: "UNAUTHORIZED" }), {
+        status: 401,
+        headers: headers,
+      });
+    } else {
+      return resp;
+    }
+  }
+  // get token
   if (url.pathname == "/v2/auth") {
     const newUrl = new URL(upstream + "/v2/");
     const resp = await fetch(newUrl.toString(), {
@@ -67,6 +82,7 @@ async function handleRequest(request) {
     const wwwAuthenticate = parseAuthenticate(authenticateStr);
     return await fetchToken(wwwAuthenticate, url.searchParams);
   }
+  // foward requests
   const newUrl = new URL(upstream + url.pathname);
   const newReq = new Request(newUrl, {
     method: request.method,
