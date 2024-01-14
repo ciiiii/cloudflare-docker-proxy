@@ -4,7 +4,7 @@ addEventListener("fetch", (event) => {
 });
 
 const routes = {
-  "${workername}.${username}.workers.dev/": "https://registry-1.docker.io",
+  "docker.10105410.xyz": "https://registry-1.docker.io",
 };
 
 function routeByHosts(host) {
