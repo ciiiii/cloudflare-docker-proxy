@@ -4,6 +4,11 @@ addEventListener("fetch", (event) => {
 });
 
 const routes = {
+"nvcr.oracleoaec.com":"https://nvcr.io",
+"mcr.oracleoaec.com":"https://mcr.microsoft.com",
+"ghcr.oracleoaec.com":"https://ghcr.io",
+"elastic.oracleoaec.com":"https://docker.elastic.co",
+ "15d.oracleoaec.com":"https://cr.15d.io",
   "docker.oracleoaec.com": "https://registry-1.docker.io",
   "quay.oracleoaec.com": "https://quay.io",
   "gcr.oracleoaec.com": "https://gcr.io",
