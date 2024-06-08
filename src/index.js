@@ -11,6 +11,7 @@ const routes = {
   "k8s.chenby.cn": "https://registry.k8s.io",
   "ghcr.chenby.cn": "https://ghcr.io",
   "cloudsmith.chenby.cn": "https://docker.cloudsmith.io",
+  "elastic.chenby.cn":"https://docker.elastic.co",
 };
 
 function routeByHosts(host) {
