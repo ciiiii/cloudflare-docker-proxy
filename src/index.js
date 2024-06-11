@@ -4,6 +4,7 @@ addEventListener("fetch", (event) => {
 });
 
 const routes = {
+  "cloudflare-docker-proxy.hoseops.workers.dev": "https://registry-1.docker.io",
   "docker.hose.cloud": "https://registry-1.docker.io",
   "quay.hose.cloud": "https://quay.io",
   "gcr.hose.cloud": "https://gcr.io",
