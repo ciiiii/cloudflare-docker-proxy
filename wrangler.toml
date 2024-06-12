@@ -16,5 +16,4 @@ TARGET_UPSTREAM=""
 
 [env.dev.vars]
 MODE="debug"
-LOCAL_ADDRESS="http://192.168.10.102:8787"
 TARGET_UPSTREAM="https://registry-1.docker.io"
