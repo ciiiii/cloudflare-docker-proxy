@@ -25,27 +25,6 @@ function routeByHosts(host) {
 
 async function handleRequest(request) {
   const url = new URL(request.url);
-  const authorization = request.headers.get("Authorization");
-  if (url.pathname == "/v2/") {
-    if (authorization === null || authorization === "") {
-      const headers = new Headers();
-      if (MODE == "debug") {
-        headers.set(
-          "Www-Authenticate",
-          `Bearer realm="http://${url.host}/v2/auth",service="cloudflare-docker-proxy"`
-        );
-      } else {
-        headers.set(
-          "Www-Authenticate",
-          `Bearer realm="https://${url.hostname}/v2/auth",service="cloudflare-docker-proxy"`
-        );
-      }
-      return new Response(JSON.stringify({ message: "UNAUTHORIZED" }), {
-        status: 401,
-        headers: headers,
-      });
-    }
-  }
   const upstream = routeByHosts(url.hostname);
   if (upstream === "") {
     return new Response(
@@ -57,20 +36,24 @@ async function handleRequest(request) {
       }
     );
   }
-  // check if need to authenticate
+  const authorization = request.headers.get("Authorization");
   if (url.pathname == "/v2/") {
     const newUrl = new URL(upstream + "/v2/");
+    const headers = new Headers();
+    if (authorization) {
+      headers.set("Authorization", authorization);
+    }
+    // check if need to authenticate
     const resp = await fetch(newUrl.toString(), {
       method: "GET",
+      headers: headers,
       redirect: "follow",
     });
-    if (resp.status === 200) {
-    } else if (resp.status === 401) {
-      const headers = new Headers();
+    if (resp.status === 401) {
       if (MODE == "debug") {
         headers.set(
           "Www-Authenticate",
-          `Bearer realm="${LOCAL_ADDRESS}/v2/auth",service="cloudflare-docker-proxy"`
+          `Bearer realm="http://${url.host}/v2/auth",service="cloudflare-docker-proxy"`
         );
       } else {
         headers.set(
