@@ -25,6 +25,27 @@ function routeByHosts(host) {
 
 async function handleRequest(request) {
   const url = new URL(request.url);
+  const authorization = request.headers.get("Authorization");
+  if (url.pathname == "/v2/") {
+    if (authorization === null || authorization === "") {
+      const headers = new Headers();
+      if (MODE == "debug") {
+        headers.set(
+          "Www-Authenticate",
+          `Bearer realm="http://${url.host}/v2/auth",service="cloudflare-docker-proxy"`
+        );
+      } else {
+        headers.set(
+          "Www-Authenticate",
+          `Bearer realm="https://${url.hostname}/v2/auth",service="cloudflare-docker-proxy"`
+        );
+      }
+      return new Response(JSON.stringify({ message: "UNAUTHORIZED" }), {
+        status: 401,
+        headers: headers,
+      });
+    }
+  }
   const upstream = routeByHosts(url.hostname);
   if (upstream === "") {
     return new Response(
@@ -80,7 +101,7 @@ async function handleRequest(request) {
       return resp;
     }
     const wwwAuthenticate = parseAuthenticate(authenticateStr);
-    return await fetchToken(wwwAuthenticate, url.searchParams);
+    return await fetchToken(wwwAuthenticate, url.searchParams, authorization);
   }
   // foward requests
   const newUrl = new URL(upstream + url.pathname);
@@ -106,7 +127,7 @@ function parseAuthenticate(authenticateStr) {
   };
 }
 
-async function fetchToken(wwwAuthenticate, searchParams) {
+async function fetchToken(wwwAuthenticate, searchParams, authorization) {
   const url = new URL(wwwAuthenticate.realm);
   if (wwwAuthenticate.service.length) {
     url.searchParams.set("service", wwwAuthenticate.service);
@@ -114,5 +135,9 @@ async function fetchToken(wwwAuthenticate, searchParams) {
   if (searchParams.get("scope")) {
     url.searchParams.set("scope", searchParams.get("scope"));
   }
-  return await fetch(url, { method: "GET", headers: {} });
+  headers = new Headers();
+  if (authorization) {
+    headers.set("Authorization", authorization);
+  }
+  return await fetch(url, { method: "GET", headers: headers });
 }
