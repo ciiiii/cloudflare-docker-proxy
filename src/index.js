@@ -25,8 +25,12 @@ function routeByHosts(host) {
 
 async function handleRequest(request) {
   const url = new URL(request.url);
-  const upstream = routeByHosts(url.hostname);
-  if (upstream === "") {
+  const { pathname, host, hostname, search, searchParams } = url;
+  const upstream = routeByHosts(hostname);
+  if (
+    upstream === "" ||
+    (upstream === "https://registry-1.docker.io" && pathname === "/")
+  ) {
     return new Response(
       JSON.stringify({
         routes: routes,
@@ -37,7 +41,7 @@ async function handleRequest(request) {
     );
   }
   const authorization = request.headers.get("Authorization");
-  if (url.pathname == "/v2/") {
+  if (pathname == "/v2/") {
     const newUrl = new URL(upstream + "/v2/");
     const headers = new Headers();
     if (authorization) {
@@ -53,12 +57,12 @@ async function handleRequest(request) {
       if (MODE == "debug") {
         headers.set(
           "Www-Authenticate",
-          `Bearer realm="http://${url.host}/v2/auth",service="cloudflare-docker-proxy"`
+          `Bearer realm="http://${host}/v2/auth",service="cloudflare-docker-proxy"`
         );
       } else {
         headers.set(
           "Www-Authenticate",
-          `Bearer realm="https://${url.hostname}/v2/auth",service="cloudflare-docker-proxy"`
+          `Bearer realm="https://${hostname}/v2/auth",service="cloudflare-docker-proxy"`
         );
       }
       return new Response(JSON.stringify({ message: "UNAUTHORIZED" }), {
@@ -70,7 +74,7 @@ async function handleRequest(request) {
     }
   }
   // get token
-  if (url.pathname == "/v2/auth") {
+  if (pathname == "/v2/auth") {
     const newUrl = new URL(upstream + "/v2/");
     const resp = await fetch(newUrl.toString(), {
       method: "GET",
@@ -84,10 +88,10 @@ async function handleRequest(request) {
       return resp;
     }
     const wwwAuthenticate = parseAuthenticate(authenticateStr);
-    return await fetchToken(wwwAuthenticate, url.searchParams, authorization);
+    return await fetchToken(wwwAuthenticate, searchParams, authorization);
   }
   // foward requests
-  const newUrl = new URL(upstream + url.pathname);
+  const newUrl = new URL(upstream + pathname);
   const newReq = new Request(newUrl, {
     method: request.method,
     headers: request.headers,
