@@ -19,5 +19,5 @@ jobs:
         with:
           apiToken: ${{ secrets.CF_API_TOKEN }}
           accountId: ${{secrets.CF_ACCOUNT_ID}}
-          command: deploy --env staging --minify src/index.ts
+          command: deploy --env staging --minify src/index.js
           environment: staging

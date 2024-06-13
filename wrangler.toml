@@ -28,6 +28,8 @@ routes = [
 name = "cloudflare-docker-proxy-staging"
 route = { pattern = "docker-staging.libcuda.so", custom_domain = true }
 
+[env.staging.vars]
+
 [env.dev.vars]
 MODE = "debug"
 TARGET_UPSTREAM = "https://registry-1.docker.io"
