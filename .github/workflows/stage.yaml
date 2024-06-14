@@ -4,6 +4,7 @@ on:
   pull_request_target:
     branches:
       - master
+    types: [opened, synchronize, reopened, ready_for_review]
     paths-ignore:
       - '**.md'
   repository_dispatch:
