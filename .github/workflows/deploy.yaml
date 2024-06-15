@@ -11,16 +11,13 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    name: Build & Deploy
     steps:
       - uses: actions/checkout@v4
-      # 添加此步骤以安装Yarn（如果需要）
-      - run: npm install -g yarn
-      - name: Install Dependencies
-        run: yarn install --frozen-lockfile # 使用--frozen-lockfile确保遵守yarn.lock锁定的版本
       - name: Publish
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CF_API_TOKEN }}
-          accountId: ${{ secrets.CF_ACCOUNT_ID }}
+          accountId: ${{secrets.CF_ACCOUNT_ID}}
           command: deploy --env production --minify src/index.js
           environment: production
