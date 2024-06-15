@@ -11,7 +11,7 @@ MODE = "debug"
 TARGET_UPSTREAM = "https://registry-1.docker.io"
 
 [env.production]
-name = "cloudflare-docker-proxy"
+name = "dockerproxy"
 routes = [
   { pattern = "docker.cnrowe.cn", custom_domain = true },
   { pattern = "quey.cnrowe.cn", custom_domain = true },
@@ -27,7 +27,7 @@ MODE = "production"
 TARGET_UPSTREAM = ""
 
 [env.staging]
-name = "cloudflare-docker-proxy-staging"
+name = "dockerproxy-staging"
 route = { pattern = "docker-staging.cnrowe.cn", custom_domain = true }
 
 [env.staging.vars]
