@@ -5,18 +5,21 @@ addEventListener("fetch", (event) => {
 
 const dockerHub = "https://registry-1.docker.io";
 
+// defined you domain
+const domain = 'libcuda.so'
+
 const routes = {
   // production
-  "docker.libcuda.so": dockerHub,
-  "quay.libcuda.so": "https://quay.io",
-  "gcr.libcuda.so": "https://gcr.io",
-  "k8s-gcr.libcuda.so": "https://k8s.gcr.io",
-  "k8s.libcuda.so": "https://registry.k8s.io",
-  "ghcr.libcuda.so": "https://ghcr.io",
-  "cloudsmith.libcuda.so": "https://docker.cloudsmith.io",
+  ["docker." + domain]: dockerHub,
+  ["quay." + domain]: "https://quay.io",
+  ["gcr." + domain]: "https://gcr.io",
+  ["k8s-gcr." + domain]: "https://k8s.gcr.io",
+  ["k8s." + domain]: "https://registry.k8s.io",
+  ["ghcr." + domain]: "https://ghcr.io",
+  ["cloudsmith."+domain]: "https://docker.cloudsmith.io",
 
   // staging
-  "docker-staging.libcuda.so": dockerHub,
+  ["docker-staging."+domain]: dockerHub,
 };
 
 function routeByHosts(host) {
@@ -33,10 +36,15 @@ async function handleRequest(request) {
   const url = new URL(request.url);
   const upstream = routeByHosts(url.hostname);
   if (upstream === "") {
-    return new Response(
-      JSON.stringify({
+    // show route info, noly "MODE == debug"
+    let body_data = ""
+    if (MODE == "debug") {
+      body_data = JSON.stringify({
         routes: routes,
-      }),
+      })
+    }
+    return new Response(
+      body_data,
       {
         status: 404,
       }
