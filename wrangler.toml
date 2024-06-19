@@ -28,7 +28,7 @@ TARGET_UPSTREAM = ""
 
 [env.staging]
 name = "cloudflare-docker-proxy-staging"
-route = { pattern = "docker.jerrynote.com", custom_domain = true }
+route = { pattern = "docker2.jerrynote.com", custom_domain = true }
 
 [env.staging.vars]
 MODE = "staging"
