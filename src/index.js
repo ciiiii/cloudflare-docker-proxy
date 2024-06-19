@@ -16,7 +16,7 @@ const routes = {
   //"cloudsmith.jerrynote.com": "https://docker.cloudsmith.io",
 
   // staging
-  "docker-staging.jerrynote.com": dockerHub,
+  //"docker-staging.jerrynote.com": dockerHub,
 };
 
 function routeByHosts(host) {
