@@ -14,7 +14,7 @@ TARGET_UPSTREAM = "https://registry-1.docker.io"
 name = "cloudflare-docker-proxy"
 routes = [
   { pattern = "docker.libcuda.so", custom_domain = true },
-  { pattern = "quey.libcuda.so", custom_domain = true },
+  { pattern = "quay.libcuda.so", custom_domain = true },
   { pattern = "gcr.libcuda.so", custom_domain = true },
   { pattern = "k8s-gcr.libcuda.so", custom_domain = true },
   { pattern = "k8s.libcuda.so", custom_domain = true },
