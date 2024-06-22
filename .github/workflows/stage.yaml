@@ -3,7 +3,7 @@ name: Deploy to Cloudflare Workers(Staging)
 on:
   pull_request:
     branches:
-      - master
+      - devrlop
     paths-ignore:
       - '**.md'
   repository_dispatch:
