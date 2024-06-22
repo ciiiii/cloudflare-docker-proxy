@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="keywords" content="docker|dockerhub|vps|老E的博客"> 
+<meta name="description" content="老E的博客-appscross.com-VPS | AIGC | Proxy | TVBox">
+<title>Docker镜像加速-老E的博客</title>
+<style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: #3d3d3d;
+            margin: 0;
+            padding: 20px;
+            background: #242424;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: rgba(20, 19, 19, 0.8);
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2, h3 {
+            color: #ece6ec;
+        }
+        p {
+            margin-bottom: 1em;
+            color: #f8f8f2;
+        }
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            position: relative;
+        }
+        pre::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 12px;
+            height: 12px;
+            background: #ff5f56;
+            border-radius: 50%;
+            box-shadow: 20px 0 0 #ffbd2e, 40px 0 0 #27c93f;
+        }
+        code {
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+            font-size: 0.875em;
+        }
+        .copy-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #007aff;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        pre:hover .copy-button {
+            opacity: 1;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            color: #ece6ec;
+            font-size: 0.875em;
+        }
+        .footer a {
+            color: #007aff;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+<center><h2><a href="https://appscross.com" target="_blank">自用</a> Docker Hub 镜像加速</h2></center>
+<h3>为了加速镜像拉取，使用以下命令设置<b>registry mirror</b></h3>
+<pre><code>
+mkdir -p /etc/docker</code><button class="copy-button" onclick="copyCode(this)">复制代码</button></pre>
+<pre><code>
+tee /etc/docker/daemon.json &lt;&lt;EOF
+{
+    "registry-mirrors": ["https://docker.laoex.link"]
+}
+EOF</code><button class="copy-button" onclick="copyCode(this)">复制代码</button></pre>
+<pre><code>
+systemctl daemon-reload</code><button class="copy-button" onclick="copyCode(this)">复制代码</button></pre>
+<pre><code>
+systemctl restart docker</code><button class="copy-button" onclick="copyCode(this)">复制代码</button></pre>
+<p><h3>不用设置环境也可以直接使用，用法示例：</h3></p>
+<pre><code>
+docker pull docker.laoex.link/library/mysql:8.0</code><button class="copy-button" onclick="copyCode(this)">复制代码</button></pre>
+<p>说明：library是一个特殊的命名空间，它代表的是官方镜像。</p>
+</div>
+<div class="footer">
+    &copy; <a href="https://appscross.com" target="_blank">老E的博客</a>自建镜像，请勿滥用。
+</div>
+<script>
+        function copyCode(button) {
+            const code = button.previousSibling;
+            const textArea = document.createElement('textarea');
+            textArea.value = code.textContent;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+            button.textContent = '已复制';
+            setTimeout(() => {
+                button.textContent = '复制代码';
+            }, 2000);
+        }
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'896b4e01b8b8985b',t:'MTcxODg4MTc0Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
