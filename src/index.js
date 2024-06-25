@@ -5,14 +5,14 @@ addEventListener("fetch", (event) => {
 
 const routes = {
   "docker.liulinlin.life": "https://registry-1.docker.io",
-  "docker.liulinlin.top": "https://registry-1.docker.io",
+  "docker.liulinlin.uk": "https://registry-1.docker.io",
   "quay.liulinlin.life": "https://quay.io",
-  "quay.liulinlin.top": "https://quay.io",
-  "gcr.liulinlin.life": "https://gcr.io",
-  "k8s-gcr.liulinlin.life": "https://k8s.gcr.io",
-  "k8s.liulinlin.life": "https://registry.k8s.io",
-  "ghcr.liulinlin.life": "https://ghcr.io",
-  "cloudsmith.liulinlin.life": "https://docker.cloudsmith.io"
+  "quay.liulinlin.uk": "https://quay.io",
+  "gcr.liulinlin.uk": "https://gcr.io",
+  "k8s-gcr.liulinlin.uk": "https://k8s.gcr.io",
+  "k8s.liulinlin.uk": "https://registry.k8s.io",
+  "ghcr.liulinlin.uk": "https://ghcr.io",
+  "cloudsmith.liulinlin.uk": "https://docker.cloudsmith.io"
 };
 
 function routeByHosts(host) {
