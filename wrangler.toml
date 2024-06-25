@@ -6,6 +6,9 @@ ip = "0.0.0.0"
 port = 8787
 local_protocol = "http"
 
+[env.vars]
+CUSTOM_DOMAIN = "libcuda.so"
+
 [env.dev.vars]
 MODE = "debug"
 TARGET_UPSTREAM = "https://registry-1.docker.io"
