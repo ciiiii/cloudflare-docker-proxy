@@ -30,16 +30,15 @@
    - add more records and modify the config(src/index.js) as you need
    ```javascript
    const routes = {
-  "docker.liebe.pub": dockerHub,
-  "quay.liebe.pub": "https://quay.io",
-  "gcr.liebe.pub": "https://gcr.io",
-  "k8s-gcr.liebe.pub": "https://k8s.gcr.io",
-  "k8s.liebe.pub": "https://registry.k8s.io",
-  "ghcr.liebe.pub": "https://ghcr.io",
-  "cloudsmith.liebe.pub": "https://docker.cloudsmith.io",
-  "ecr.liebe.pub": "https://public.ecr.aws",
-
-  "docker-staging.liebe.pub": dockerHub,
+      "docker.liebe.pub": dockerHub,
+      "quay.liebe.pub": "https://quay.io",
+      "gcr.liebe.pub": "https://gcr.io",
+      "k8s-gcr.liebe.pub": "https://k8s.gcr.io",
+      "k8s.liebe.pub": "https://registry.k8s.io",
+      "ghcr.liebe.pub": "https://ghcr.io",
+      "cloudsmith.liebe.pub": "https://docker.cloudsmith.io",
+      "ecr.liebe.pub": "https://public.ecr.aws",
+      "docker-staging.liebe.pub": dockerHub,
   };
    ```
 
