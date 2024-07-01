@@ -27,14 +27,21 @@
    - add `A` record of xxx.example.com to `192.0.2.1`
    - deploy this project to cloudflare workers
    - add `xxx.example.com/*` to HTTP routes of workers
-   - add more records and modify the config as you need
+   - add more records and modify the config(src/index.js) as you need
    ```javascript
    const routes = {
-     "docker.libcuda.so": "https://registry-1.docker.io",
-     "quay.libcuda.so": "https://quay.io",
-     "gcr.libcuda.so": "https://k8s.gcr.io",
-     "k8s-gcr.libcuda.so": "https://k8s.gcr.io",
-     "ghcr.libcuda.so": "https://ghcr.io",
-   };
+  // production
+  "docker.liebe.pub": dockerHub,
+  "quay.liebe.pub": "https://quay.io",
+  "gcr.liebe.pub": "https://gcr.io",
+  "k8s-gcr.liebe.pub": "https://k8s.gcr.io",
+  "k8s.liebe.pub": "https://registry.k8s.io",
+  "ghcr.liebe.pub": "https://ghcr.io",
+  "cloudsmith.liebe.pub": "https://docker.cloudsmith.io",
+  "ecr.liebe.pub": "https://public.ecr.aws",
+
+  // staging
+  "docker-staging.liebe.pub": dockerHub,
+  };
    ```
 
