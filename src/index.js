@@ -3,15 +3,22 @@ addEventListener("fetch", (event) => {
   event.respondWith(handleRequest(event.request));
 });
 
+const dockerHub = "https://registry-1.docker.io";
+
 const routes = {
-  "docker.chenby.cn": "https://registry-1.docker.io",
+  // production
+  "docker.chenby.cn": dockerHub,
   "quay.chenby.cn": "https://quay.io",
   "gcr.chenby.cn": "https://gcr.io",
   "k8s-gcr.chenby.cn": "https://k8s.gcr.io",
   "k8s.chenby.cn": "https://registry.k8s.io",
   "ghcr.chenby.cn": "https://ghcr.io",
   "cloudsmith.chenby.cn": "https://docker.cloudsmith.io",
+  "ecr.chenby.cn": "https://public.ecr.aws",
   "elastic.chenby.cn":"https://docker.elastic.co",
+
+  // staging
+  "docker-staging.chenby.cn": dockerHub,
 };
 
 function routeByHosts(host) {
@@ -37,20 +44,25 @@ async function handleRequest(request) {
       }
     );
   }
-  // check if need to authenticate
+  const isDockerHub = upstream == dockerHub;
+  const authorization = request.headers.get("Authorization");
   if (url.pathname == "/v2/") {
     const newUrl = new URL(upstream + "/v2/");
+    const headers = new Headers();
+    if (authorization) {
+      headers.set("Authorization", authorization);
+    }
+    // check if need to authenticate
     const resp = await fetch(newUrl.toString(), {
       method: "GET",
+      headers: headers,
       redirect: "follow",
     });
-    if (resp.status === 200) {
-    } else if (resp.status === 401) {
-      const headers = new Headers();
+    if (resp.status === 401) {
       if (MODE == "debug") {
         headers.set(
           "Www-Authenticate",
-          `Bearer realm="${LOCAL_ADDRESS}/v2/auth",service="cloudflare-docker-proxy"`
+          `Bearer realm="http://${url.host}/v2/auth",service="cloudflare-docker-proxy"`
         );
       } else {
         headers.set(
@@ -81,7 +93,28 @@ async function handleRequest(request) {
       return resp;
     }
     const wwwAuthenticate = parseAuthenticate(authenticateStr);
-    return await fetchToken(wwwAuthenticate, url.searchParams);
+    let scope = url.searchParams.get("scope");
+    // autocomplete repo part into scope for DockerHub library images
+    // Example: repository:busybox:pull => repository:library/busybox:pull
+    if (scope && isDockerHub) {
+      let scopeParts = scope.split(":");
+      if (scopeParts.length == 3 && !scopeParts[1].includes("/")) {
+        scopeParts[1] = "library/" + scopeParts[1];
+        scope = scopeParts.join(":");
+      }
+    }
+    return await fetchToken(wwwAuthenticate, scope, authorization);
+  }
+  // redirect for DockerHub library images
+  // Example: /v2/busybox/manifests/latest => /v2/library/busybox/manifests/latest
+  if (isDockerHub) {
+    const pathParts = url.pathname.split("/");
+    if (pathParts.length == 5) {
+      pathParts.splice(2, 0, "library");
+      const redirectUrl = new URL(url);
+      redirectUrl.pathname = pathParts.join("/");
+      return Response.redirect(redirectUrl, 301);
+    }
   }
   // foward requests
   const newUrl = new URL(upstream + url.pathname);
@@ -98,7 +131,7 @@ function parseAuthenticate(authenticateStr) {
   // match strings after =" and before "
   const re = /(?<=\=")(?:\\.|[^"\\])*(?=")/g;
   const matches = authenticateStr.match(re);
-  if (matches === null || matches.length < 2) {
+  if (matches == null || matches.length < 2) {
     throw new Error(`invalid Www-Authenticate Header: ${authenticateStr}`);
   }
   return {
@@ -107,13 +140,17 @@ function parseAuthenticate(authenticateStr) {
   };
 }
 
-async function fetchToken(wwwAuthenticate, searchParams) {
+async function fetchToken(wwwAuthenticate, scope, authorization) {
   const url = new URL(wwwAuthenticate.realm);
   if (wwwAuthenticate.service.length) {
     url.searchParams.set("service", wwwAuthenticate.service);
   }
-  if (searchParams.get("scope")) {
-    url.searchParams.set("scope", searchParams.get("scope"));
+  if (scope) {
+    url.searchParams.set("scope", scope);
   }
-  return await fetch(url, { method: "GET", headers: {} });
+  headers = new Headers();
+  if (authorization) {
+    headers.set("Authorization", authorization);
+  }
+  return await fetch(url, { method: "GET", headers: headers });
 }
