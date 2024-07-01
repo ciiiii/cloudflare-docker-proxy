@@ -1,10 +1,10 @@
 # cloudflare-docker-proxy
 
-![deploy](https://github.com/ciiiii/cloudflare-docker-proxy/actions/workflows/deploy.yaml/badge.svg)
+![deploy](https://github.com/lzkahh/cloudflare-docker-proxy/actions/workflows/deploy.yaml/badge.svg)
 
-[![Deploy to Cloudflare Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/ciiiii/cloudflare-docker-proxy)
+[![Deploy to Cloudflare Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/lzkahh/cloudflare-docker-proxy)
 
-> If you're looking for proxy for helm, maybe you can try [cloudflare-helm-proxy](https://github.com/ciiiii/cloudflare-helm-proxy).
+> If you're looking for proxy for helm, maybe you can try [cloudflare-helm-proxy](https://github.com/lzkahh/cloudflare-helm-proxy).
 
 ## Deploy
 
@@ -12,7 +12,7 @@
 2. follow the instructions to fork and deploy
 3. update routes as you requirement
 
-[![Deploy to Cloudflare Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/ciiiii/cloudflare-docker-proxy)
+[![Deploy to Cloudflare Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/lzkahh/cloudflare-docker-proxy)
 
 ## Routes configuration tutorial
 
