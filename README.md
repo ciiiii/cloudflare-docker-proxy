@@ -30,7 +30,6 @@
    - add more records and modify the config(src/index.js) as you need
    ```javascript
    const routes = {
-  // production
   "docker.liebe.pub": dockerHub,
   "quay.liebe.pub": "https://quay.io",
   "gcr.liebe.pub": "https://gcr.io",
@@ -40,7 +39,6 @@
   "cloudsmith.liebe.pub": "https://docker.cloudsmith.io",
   "ecr.liebe.pub": "https://public.ecr.aws",
 
-  // staging
   "docker-staging.liebe.pub": dockerHub,
   };
    ```
