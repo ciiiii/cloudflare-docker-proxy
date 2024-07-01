@@ -39,6 +39,5 @@
       "cloudsmith.liebe.pub": "https://docker.cloudsmith.io",
       "ecr.liebe.pub": "https://public.ecr.aws",
       "docker-staging.liebe.pub": dockerHub,
-  };
+   };
    ```
-
