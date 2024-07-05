@@ -12,15 +12,15 @@ TARGET_UPSTREAM = "https://registry-1.docker.io"
 
 [env.production]
 name = "cloudflare-docker-proxy"
- routes = [
-   { pattern = "docker.myasmr.com", custom_domain = true },
-   { pattern = "quay.myasmr.com", custom_domain = true },
-   { pattern = "gcr.myasmr.com", custom_domain = true },
-   { pattern = "k8s-gcr.myasmr.com", custom_domain = true },
-   { pattern = "k8s.myasmr.com", custom_domain = true },
-   { pattern = "ghcr.myasmr.com", custom_domain = true },
-   { pattern = "cloudsmith.myasmr.com", custom_domain = true },
- ]
+routes = [
+  { pattern = "docker.myasmr.com", custom_domain = true },
+  { pattern = "quay.myasmr.com", custom_domain = true },
+  { pattern = "gcr.myasmr.com", custom_domain = true },
+  { pattern = "k8s-gcr.myasmr.com", custom_domain = true },
+  { pattern = "k8s.myasmr.com", custom_domain = true },
+  { pattern = "ghcr.myasmr.com", custom_domain = true },
+  { pattern = "cloudsmith.myasmr.com", custom_domain = true },
+]
 
 [env.production.vars]
 MODE = "production"
