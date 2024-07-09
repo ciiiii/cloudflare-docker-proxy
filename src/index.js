@@ -6,7 +6,7 @@ addEventListener("fetch", (event) => {
 const dockerHub = "https://registry-1.docker.io";
 
 const routes = {
-  "docker.liulinlin.life": "https://registry-1.docker.io",
+  "docker.liulinlin.life": dockerHub,
   "docker.liulinlin.uk": "https://registry-1.docker.io",
   "quay.liulinlin.life": "https://quay.io",
   "quay.liulinlin.uk": "https://quay.io",
@@ -14,7 +14,10 @@ const routes = {
   "k8s-gcr.liulinlin.uk": "https://k8s.gcr.io",
   "k8s.liulinlin.uk": "https://registry.k8s.io",
   "ghcr.liulinlin.uk": "https://ghcr.io",
-  "cloudsmith.liulinlin.uk": "https://docker.cloudsmith.io"
+  "cloudsmith.liulinlin.uk": "https://docker.cloudsmith.io",
+  "ecr.liulinlin.uk": "https://public.ecr.aws",
+  // staging
+  "docker-staging.liulinlin.uk": dockerHub,
 };
 
 function routeByHosts(host) {
