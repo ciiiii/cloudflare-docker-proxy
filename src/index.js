@@ -3,6 +3,8 @@ addEventListener("fetch", (event) => {
   event.respondWith(handleRequest(event.request));
 });
 
+const dockerHub = "https://registry-1.docker.io";
+
 const routes = {
   "docker.liulinlin.life": "https://registry-1.docker.io",
   "docker.liulinlin.uk": "https://registry-1.docker.io",
@@ -38,6 +40,7 @@ async function handleRequest(request) {
       }
     );
   }
+  const isDockerHub = upstream == dockerHub;
   const authorization = request.headers.get("Authorization");
   if (url.pathname == "/v2/") {
     const newUrl = new URL(upstream + "/v2/");
@@ -86,7 +89,28 @@ async function handleRequest(request) {
       return resp;
     }
     const wwwAuthenticate = parseAuthenticate(authenticateStr);
-    return await fetchToken(wwwAuthenticate, url.searchParams, authorization);
+    let scope = url.searchParams.get("scope");
+    // autocomplete repo part into scope for DockerHub library images
+    // Example: repository:busybox:pull => repository:library/busybox:pull
+    if (scope && isDockerHub) {
+      let scopeParts = scope.split(":");
+      if (scopeParts.length == 3 && !scopeParts[1].includes("/")) {
+        scopeParts[1] = "library/" + scopeParts[1];
+        scope = scopeParts.join(":");
+      }
+    }
+    return await fetchToken(wwwAuthenticate, scope, authorization);
+  }
+  // redirect for DockerHub library images
+  // Example: /v2/busybox/manifests/latest => /v2/library/busybox/manifests/latest
+  if (isDockerHub) {
+    const pathParts = url.pathname.split("/");
+    if (pathParts.length == 5) {
+      pathParts.splice(2, 0, "library");
+      const redirectUrl = new URL(url);
+      redirectUrl.pathname = pathParts.join("/");
+      return Response.redirect(redirectUrl, 301);
+    }
   }
   // foward requests
   const newUrl = new URL(upstream + url.pathname);
@@ -103,7 +127,7 @@ function parseAuthenticate(authenticateStr) {
   // match strings after =" and before "
   const re = /(?<=\=")(?:\\.|[^"\\])*(?=")/g;
   const matches = authenticateStr.match(re);
-  if (matches === null || matches.length < 2) {
+  if (matches == null || matches.length < 2) {
     throw new Error(`invalid Www-Authenticate Header: ${authenticateStr}`);
   }
   return {
@@ -112,13 +136,13 @@ function parseAuthenticate(authenticateStr) {
   };
 }
 
-async function fetchToken(wwwAuthenticate, searchParams, authorization) {
+async function fetchToken(wwwAuthenticate, scope, authorization) {
   const url = new URL(wwwAuthenticate.realm);
   if (wwwAuthenticate.service.length) {
     url.searchParams.set("service", wwwAuthenticate.service);
   }
-  if (searchParams.get("scope")) {
-    url.searchParams.set("scope", searchParams.get("scope"));
+  if (scope) {
+    url.searchParams.set("scope", scope);
   }
   headers = new Headers();
   if (authorization) {
