@@ -1,6 +1,7 @@
 const path = require("path");
 
 module.exports = {
+  outputDir: "public"
   context: path.resolve(__dirname, "./"),
   target: "webworker",
   mode: "production",
