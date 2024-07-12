@@ -12,9 +12,8 @@
     "wrangler": "^3.36.0"
   },
   "scripts": {
-    "build": "webpack build --output public",
     "format": "prettier --write '**/*.{js,css,json,md}'",
-   "build1": "webpack",
+   "build": "webpack",
     "dev": "wrangler dev src/index.js --env dev"
   },
   "license": "MIT",
