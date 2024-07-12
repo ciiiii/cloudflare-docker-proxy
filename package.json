@@ -13,7 +13,7 @@
   },
   "scripts": {
     "format": "prettier --write '**/*.{js,css,json,md}'",
-   "build": "webpack  --output public ",
+   "build": "webpack build   --output public ",
     "dev": "wrangler dev src/index.js --env dev"
   },
   "license": "MIT",
