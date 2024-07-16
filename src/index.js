@@ -15,7 +15,7 @@ const routes = {
   "ghcr.yeeauth.com": "https://ghcr.io",
   "cloudsmith.yeeauth.com": "https://docker.cloudsmith.io",
   "ecr.yeeauth.com": "https://public.ecr.aws",
-  "cloudflare.yeeauth.com":"https://production.cloudflare.docker.com",
+  "weaviate.yeeauth.com":"https://cr.weaviate.io",
 
   // staging
   "docker-staging.libcuda.so": dockerHub,
