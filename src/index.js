@@ -16,10 +16,6 @@ const routes = {
   "k8s.aierliz.top": "https://registry.k8s.io",
   "ghcr.aierliz.top": "https://ghcr.io",
   "cloudsmith.aierliz.top": "https://docker.cloudsmith.io",
-  "ecr.aierliz.top": "https://public.ecr.aws",
-
-  // staging
-  "docker-staging.aierliz.top": dockerHub,
 };
 
 function routeByHosts(host) {
