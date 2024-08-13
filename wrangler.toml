@@ -14,7 +14,7 @@ TARGET_UPSTREAM = "https://registry-1.docker.io"
 name = "cloudflare-docker-proxy"
 routes = [
   { pattern = "docker.mirror.clemon.icu", custom_domain = true },
-  { pattern = "quey.mirror.clemon.icu", custom_domain = true },
+  { pattern = "quay.mirror.clemon.icu", custom_domain = true },
   { pattern = "gcr.mirror.clemon.icu", custom_domain = true },
   { pattern = "k8s-gcr.mirror.clemon.icu", custom_domain = true },
   { pattern = "k8s.mirror.clemon.icu", custom_domain = true },
@@ -28,7 +28,7 @@ TARGET_UPSTREAM = ""
 
 [env.staging]
 name = "cloudflare-docker-proxy-staging"
-route = { pattern = "docker-staging.mirror.clemon.icu", custom_domain = true }
+# route = { pattern = "docker-staging.libcuda.so", custom_domain = true }
 
 [env.staging.vars]
 MODE = "staging"

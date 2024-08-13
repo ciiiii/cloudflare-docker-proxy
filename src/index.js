@@ -14,6 +14,7 @@ const routes = {
   "k8s.mirror.clemon.icu": "https://registry.k8s.io",
   "ghcr.mirror.clemon.icu": "https://ghcr.io",
   "cloudsmith.mirror.clemon.icu": "https://docker.cloudsmith.io",
+  "ecr.libcuda.so": "https://public.ecr.aws",
 
   // staging
   "docker-staging.mirror.clemon.icu": dockerHub,
