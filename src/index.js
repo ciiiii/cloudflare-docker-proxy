@@ -17,7 +17,7 @@ const routes = {
   "ecr.supowers.com": "https://public.ecr.aws",
 
   // staging
-  "newhub.supowers.com": dockerHub,
+  "newhub-stage.supowers.com": dockerHub,
 };
 
 function routeByHosts(host) {
