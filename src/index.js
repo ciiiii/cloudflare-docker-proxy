@@ -17,7 +17,7 @@ const routes = {
   "ecr.pengcheng.center": "https://public.ecr.aws",
 
   // staging
-  "docker-staging.pengcheng.team": dockerHub,
+  "docker-staging.pengcheng.center": dockerHub,
 };
 
 function routeByHosts(host) {
