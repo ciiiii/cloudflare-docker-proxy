@@ -28,7 +28,7 @@ TARGET_UPSTREAM = ""
 
 [env.staging]
 name = "cloudflare-docker-proxy-staging"
-# route = { pattern = "docker-staging.pengcheng.team", custom_domain = true }
+# route = { pattern = "docker-staging.pengcheng.center", custom_domain = true }
 
 [env.staging.vars]
 MODE = "staging"
