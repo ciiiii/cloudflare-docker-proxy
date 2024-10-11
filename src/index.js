@@ -14,11 +14,11 @@ const routes = {
   "k8s.hw2024.top": "https://registry.k8s.io",
   "ghcr.hw2024.top": "https://ghcr.io",
   "cloudsmith.hw2024.top": "https://docker.cloudsmith.io",
-  // "elastic.hw2024.top": "https://docker.elastic.co",
+  "elastic.hw2024.top": "https://docker.elastic.co",
   "ecr.hw2024.top": "https://public.ecr.aws",
 
   // staging
-  "docker-staging.hw2024.top": dockerHub,
+  // "docker-staging.hw2024.top": dockerHub,
 };
 
 function routeByHosts(host) {
