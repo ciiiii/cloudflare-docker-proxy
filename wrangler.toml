@@ -21,6 +21,7 @@ routes = [
   { pattern = "ghcr.hw2024.top", custom_domain = true },
   { pattern = "cloudsmith.hw2024.top", custom_domain = true },
   { pattern = "elastic.hw2024.top", custom_domain = true },
+  { pattern = "ecr.hw2024.top", custom_domain = true },
 ]
 
 [env.production.vars]
