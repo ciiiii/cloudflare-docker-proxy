@@ -20,17 +20,17 @@ routes = [
   { pattern = "k8s.hw2024.top", custom_domain = true },
   { pattern = "ghcr.hw2024.top", custom_domain = true },
   { pattern = "cloudsmith.hw2024.top", custom_domain = true },
-  { pattern = "elastic.hw2024.top", custom_domain = true },
+  # { pattern = "elastic.hw2024.top", custom_domain = true },
 ]
 
 [env.production.vars]
 MODE = "production"
 TARGET_UPSTREAM = ""
 
-[env.staging]
-name = "cloudflare-docker-proxy-staging"
-route = { pattern = "docker-staging.hw2024.top", custom_domain = true }
+# [env.staging]
+# name = "cloudflare-docker-proxy-staging"
+# route = { pattern = "docker-staging.hw2024.top", custom_domain = true }
 
-[env.staging.vars]
-MODE = "staging"
-TARGET_UPSTREAM = ""
+# [env.staging.vars]
+# MODE = "staging"
+# TARGET_UPSTREAM = ""
