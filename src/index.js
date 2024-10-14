@@ -1,3 +1,5 @@
+import DOCS from './help.html';
+
 addEventListener("fetch", (event) => {
   event.passThroughOnException();
   event.respondWith(handleRequest(event.request));
@@ -6,18 +8,13 @@ addEventListener("fetch", (event) => {
 const dockerHub = "https://registry-1.docker.io";
 
 const routes = {
-  // production
-  ["docker." + CUSTOM_DOMAIN]: dockerHub,
-  ["quay." + CUSTOM_DOMAIN]: "https://quay.io",
-  ["gcr." + CUSTOM_DOMAIN]: "https://gcr.io",
-  ["k8s-gcr." + CUSTOM_DOMAIN]: "https://k8s.gcr.io",
-  ["k8s." + CUSTOM_DOMAIN]: "https://registry.k8s.io",
-  ["ghcr." + CUSTOM_DOMAIN]: "https://ghcr.io",
-  ["cloudsmith." + CUSTOM_DOMAIN]: "https://docker.cloudsmith.io",
-  ["ecr." + CUSTOM_DOMAIN]: "https://public.ecr.aws",
-
-  // staging
-  ["docker-staging." + CUSTOM_DOMAIN]: dockerHub,
+  "docker.dockerqy.top": "https://registry-1.docker.io",
+  "quay.dockerqy.top": "https://quay.io",
+  "gcr.dockerqy.top": "https://gcr.io",
+  "k8s-gcr.dockerqy.top": "https://k8s.gcr.io",
+  "k8s.dockerqy.top": "https://registry.k8s.io",
+  "ghcr.dockerqy.top": "https://ghcr.io",
+  "cloudsmith.dockerqy.top": "https://docker.cloudsmith.io",
 };
 
 function routeByHosts(host) {
@@ -28,6 +25,16 @@ function routeByHosts(host) {
     return TARGET_UPSTREAM;
   }
   return "";
+}
+
+// return docs
+if (url.pathname === "/") {
+  return new Response(DOCS, {
+    status: 200,
+    headers: {
+      "content-type": "text/html"
+    }
+  });
 }
 
 async function handleRequest(request) {
