@@ -1,9 +1,7 @@
 name: Deploy to Cloudflare Workers(Staging)
 
 on:
-  pull_request:
-    branches:
-      - master
+  pull_request_target:
     paths-ignore:
       - '**.md'
   repository_dispatch:
@@ -16,8 +14,12 @@ jobs:
       - uses: actions/checkout@v4
       - name: Publish
         uses: cloudflare/wrangler-action@v3
+        env:
+          CUSTOM_DOMAIN: ${{ secrets.CUSTOM_DOMAIN || 'libcuda.so' }}
         with:
           apiToken: ${{ secrets.CF_API_TOKEN }}
           accountId: ${{secrets.CF_ACCOUNT_ID}}
+          vars:
+            CUSTOM_DOMAIN
           command: deploy --env staging --minify src/index.js
           environment: staging
