@@ -7,7 +7,7 @@ const dockerHub = "https://registry-1.docker.io";
 
 const routes = {
   // production
-  "docker01.bugaoxing.com": "https://registry-1.docker.io",
+   "docker01.bugaoxing.com": "https://registry-1.docker.io",
   "quay.libcuda.so": "https://quay.io",
   "gcr.libcuda.so": "https://gcr.io",
   "k8s-gcr.libcuda.so": "https://k8s.gcr.io",
