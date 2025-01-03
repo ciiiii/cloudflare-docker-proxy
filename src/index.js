@@ -7,17 +7,17 @@ const dockerHub = "https://registry-1.docker.io";
 
 const routes = {
   // production
-  "docker.pengcheng.center": dockerHub,
-  "quay.pengcheng.center": "https://quay.io",
-  "gcr.pengcheng.center": "https://gcr.io",
-  "k8s-gcr.pengcheng.center": "https://k8s.gcr.io",
-  "k8s.pengcheng.center": "https://registry.k8s.io",
-  "ghcr.pengcheng.center": "https://ghcr.io",
-  "cloudsmith.pengcheng.center": "https://docker.cloudsmith.io",
-  "ecr.pengcheng.center": "https://public.ecr.aws",
+  "docker.pengcheng.team": dockerHub,
+  "quay.pengcheng.team": "https://quay.io",
+  "gcr.pengcheng.team": "https://gcr.io",
+  "k8s-gcr.pengcheng.team": "https://k8s.gcr.io",
+  "k8s.pengcheng.team": "https://registry.k8s.io",
+  "ghcr.pengcheng.team": "https://ghcr.io",
+  "cloudsmith.pengcheng.team": "https://docker.cloudsmith.io",
+  "ecr.pengcheng.team": "https://public.ecr.aws",
 
   // staging
-  "docker-staging.pengcheng.center": dockerHub,
+  "docker-staging.pengcheng.team": dockerHub,
 };
 
 function routeByHosts(host) {
