@@ -34,7 +34,7 @@ TARGET_UPSTREAM = "https://registry-1.docker.io"
 name = "cloudflare-docker-proxy"
 routes = [
   { pattern = "docker.hostscc.top", custom_domain = true },
-  { pattern = "quey.hostscc.top", custom_domain = true },
+  { pattern = "quay.hostscc.top", custom_domain = true },
   { pattern = "gcr.hostscc.top", custom_domain = true },
   { pattern = "k8s-gcr.hostscc.top", custom_domain = true },
   { pattern = "k8s.hostscc.top", custom_domain = true },
