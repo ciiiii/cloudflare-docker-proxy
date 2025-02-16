@@ -105,7 +105,7 @@ async function handleRequest(request) {
   const newReq = new Request(newUrl, {
     method: request.method,
     headers: request.headers,
-    redirect: "follow",
+    redirect: "manual",
   });
   const resp = await fetch(newReq);
   if (resp.status == 401) {
