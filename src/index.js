@@ -105,11 +105,21 @@ async function handleRequest(request) {
   const newReq = new Request(newUrl, {
     method: request.method,
     headers: request.headers,
-    redirect: "manual",
+    // don't follow redirect to dockerhub blob upstream
+    redirect: isDockerHub ? "manual" : "follow",
   });
   const resp = await fetch(newReq);
   if (resp.status == 401) {
     return responseUnauthorized(url);
+  }
+  // handle dockerhub blob redirect manually
+  if (isDockerHub && resp.status == 307) {
+    const location = new URL(resp.headers.get("Location"));
+    const redirectResp = await fetch(location.toString(), {
+      method: "GET",
+      redirect: "follow",
+    });
+    return redirectResp;
   }
   return resp;
 }
