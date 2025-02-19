@@ -68,24 +68,9 @@ async function handleRequest(request) {
       redirect: "follow",
     });
     if (resp.status === 401) {
-      if (MODE == "debug") {
-        headers.set(
-          "Www-Authenticate",
-          `Bearer realm="http://${url.host}/v2/auth",service="cloudflare-docker-proxy"`
-        );
-      } else {
-        headers.set(
-          "Www-Authenticate",
-          `Bearer realm="https://${url.hostname}/v2/auth",service="cloudflare-docker-proxy"`
-        );
-      }
-      return new Response(JSON.stringify({ message: "UNAUTHORIZED" }), {
-        status: 401,
-        headers: headers,
-      });
-    } else {
-      return resp;
+      return responseUnauthorized(url);
     }
+    return resp;
   }
   // get token
   if (url.pathname == "/v2/auth") {
@@ -130,9 +115,23 @@ async function handleRequest(request) {
   const newReq = new Request(newUrl, {
     method: request.method,
     headers: request.headers,
-    redirect: "follow",
+    // don't follow redirect to dockerhub blob upstream
+    redirect: isDockerHub ? "manual" : "follow",
   });
-  return await fetch(newReq);
+  const resp = await fetch(newReq);
+  if (resp.status == 401) {
+    return responseUnauthorized(url);
+  }
+  // handle dockerhub blob redirect manually
+  if (isDockerHub && resp.status == 307) {
+    const location = new URL(resp.headers.get("Location"));
+    const redirectResp = await fetch(location.toString(), {
+      method: "GET",
+      redirect: "follow",
+    });
+    return redirectResp;
+  }
+  return resp;
 }
 
 function parseAuthenticate(authenticateStr) {
@@ -157,9 +156,28 @@ async function fetchToken(wwwAuthenticate, scope, authorization) {
   if (scope) {
     url.searchParams.set("scope", scope);
   }
-  headers = new Headers();
+  const headers = new Headers();
   if (authorization) {
     headers.set("Authorization", authorization);
   }
   return await fetch(url, { method: "GET", headers: headers });
+}
+
+function responseUnauthorized(url) {
+  const headers = new(Headers);
+  if (MODE == "debug") {
+    headers.set(
+      "Www-Authenticate",
+      `Bearer realm="http://${url.host}/v2/auth",service="cloudflare-docker-proxy"`
+    );
+  } else {
+    headers.set(
+      "Www-Authenticate",
+      `Bearer realm="https://${url.hostname}/v2/auth",service="cloudflare-docker-proxy"`
+    );
+  }
+  return new Response(JSON.stringify({ message: "UNAUTHORIZED" }), {
+    status: 401,
+    headers: headers,
+  });
 }
