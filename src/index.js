@@ -7,6 +7,8 @@ addEventListener("fetch", (event) => {
 
 const registry_dockerHub = "https://registry-1.docker.io";
 const index_dockerHub = "https://index.docker.io";
+const registry_quay = "https://quay.io";
+const index_quay = "https://quay.io";
 
 const routes = {
   // production
@@ -56,10 +58,20 @@ async function handleRequest(request) {
     });
   }
   const isDockerHub = upstream == registry_dockerHub;
+  const isQuay = upstream == registry_quay;
   const authorization = request.headers.get("Authorization");
 
-  if (url.pathname == "/v1/search" && isDockerHub) {
-    const newUrl = new URL(index_dockerHub + "/v1/search");
+  if (url.pathname == "/v1/search") {
+    let newUrl = url
+
+    if(isDockerHub){
+      newUrl = new URL(index_dockerHub + "/v1/search");
+    }else if(isQuay){
+      newUrl = new URL(index_quay + "/v1/search");
+    }else{
+      newUrl = url
+    }
+
     newUrl.search = url.search;
 
     const headers = new Headers();
