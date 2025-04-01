@@ -61,18 +61,32 @@ async function handleRequest(request) {
   const isQuay = upstream == registry_quay;
   const authorization = request.headers.get("Authorization");
 
-  if (url.pathname == "/v1/search") {
+  if (url.pathname.startsWith("/v1/")) {
     let newUrl = url
 
-    if(isDockerHub){
-      newUrl = new URL(index_dockerHub + "/v1/search");
-    }else if(isQuay){
-      newUrl = new URL(index_quay + "/v1/search");
-    }else{
-      newUrl = url
+    // Docker API /v1/_ping
+    // https://docs.docker.com/reference/api/engine/version/v1.47/#tag/System/operation/SystemPing
+    if (url.pathname == "/v1/_ping") {
+      return new Response(null, {
+        status: 200,
+        headers: {
+          "content-type": "text/plain",
+        },
+      });
     }
 
-    newUrl.search = url.search;
+    // Docker API /v1/search
+    if (url.pathname == "/v1/search") {
+      if(isDockerHub){
+        newUrl = new URL(index_dockerHub + "/v1/search");
+      }else if(isQuay){
+        newUrl = new URL(index_quay + "/v1/search");
+      }else{
+        newUrl = url
+      }
+
+      newUrl.search = url.search;
+    }
 
     const headers = new Headers();
     if (authorization) {
@@ -136,10 +150,12 @@ async function handleRequest(request) {
     }
     return await fetchToken(wwwAuthenticate, scope, authorization);
   }
+  console.log(JSON.stringify(url, null, 2))
   // redirect for DockerHub library images
   // Example: /v2/busybox/manifests/latest => /v2/library/busybox/manifests/latest
   if (isDockerHub) {
     const pathParts = url.pathname.split("/");
+    console.log(JSON.stringify(url, null, 2))
     if (pathParts.length == 5) {
       pathParts.splice(2, 0, "library");
       const redirectUrl = new URL(url);
