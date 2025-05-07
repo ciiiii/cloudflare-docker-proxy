@@ -7,17 +7,17 @@ const dockerHub = "https://registry-1.docker.io";
 
 const routes = {
   // production
-  "docker.myasmr.com": dockerHub,
-  "quay.myasmr.com": "https://quay.io",
-  "gcr.myasmr.com": "https://gcr.io",
-  "k8s-gcr.myasmr.com": "https://k8s.gcr.io",
-  "k8s.myasmr.com": "https://registry.k8s.io",
-  "ghcr.myasmr.com": "https://ghcr.io",
-  "cloudsmith.myasmr.com": "https://docker.cloudsmith.io",
-  "ecr.myasmr.com": "https://public.ecr.aws",
+  ["docker." + CUSTOM_DOMAIN]: dockerHub,
+  ["quay." + CUSTOM_DOMAIN]: "https://quay.io",
+  ["gcr." + CUSTOM_DOMAIN]: "https://gcr.io",
+  ["k8s-gcr." + CUSTOM_DOMAIN]: "https://k8s.gcr.io",
+  ["k8s." + CUSTOM_DOMAIN]: "https://registry.k8s.io",
+  ["ghcr." + CUSTOM_DOMAIN]: "https://ghcr.io",
+  ["cloudsmith." + CUSTOM_DOMAIN]: "https://docker.cloudsmith.io",
+  ["ecr." + CUSTOM_DOMAIN]: "https://public.ecr.aws",
 
   // staging
-  "docker-staging.myasmr.com": dockerHub,
+  ["docker-staging." + CUSTOM_DOMAIN]: dockerHub,
 };
 
 function routeByHosts(host) {
@@ -58,24 +58,9 @@ async function handleRequest(request) {
       redirect: "follow",
     });
     if (resp.status === 401) {
-      if (MODE == "debug") {
-        headers.set(
-          "Www-Authenticate",
-          `Bearer realm="http://${url.host}/v2/auth",service="cloudflare-docker-proxy"`
-        );
-      } else {
-        headers.set(
-          "Www-Authenticate",
-          `Bearer realm="https://${url.hostname}/v2/auth",service="cloudflare-docker-proxy"`
-        );
-      }
-      return new Response(JSON.stringify({ message: "UNAUTHORIZED" }), {
-        status: 401,
-        headers: headers,
-      });
-    } else {
-      return resp;
+      return responseUnauthorized(url);
     }
+    return resp;
   }
   // get token
   if (url.pathname == "/v2/auth") {
@@ -120,9 +105,23 @@ async function handleRequest(request) {
   const newReq = new Request(newUrl, {
     method: request.method,
     headers: request.headers,
-    redirect: "follow",
+    // don't follow redirect to dockerhub blob upstream
+    redirect: isDockerHub ? "manual" : "follow",
   });
-  return await fetch(newReq);
+  const resp = await fetch(newReq);
+  if (resp.status == 401) {
+    return responseUnauthorized(url);
+  }
+  // handle dockerhub blob redirect manually
+  if (isDockerHub && resp.status == 307) {
+    const location = new URL(resp.headers.get("Location"));
+    const redirectResp = await fetch(location.toString(), {
+      method: "GET",
+      redirect: "follow",
+    });
+    return redirectResp;
+  }
+  return resp;
 }
 
 function parseAuthenticate(authenticateStr) {
@@ -147,9 +146,28 @@ async function fetchToken(wwwAuthenticate, scope, authorization) {
   if (scope) {
     url.searchParams.set("scope", scope);
   }
-  headers = new Headers();
+  const headers = new Headers();
   if (authorization) {
     headers.set("Authorization", authorization);
   }
   return await fetch(url, { method: "GET", headers: headers });
+}
+
+function responseUnauthorized(url) {
+  const headers = new(Headers);
+  if (MODE == "debug") {
+    headers.set(
+      "Www-Authenticate",
+      `Bearer realm="http://${url.host}/v2/auth",service="cloudflare-docker-proxy"`
+    );
+  } else {
+    headers.set(
+      "Www-Authenticate",
+      `Bearer realm="https://${url.hostname}/v2/auth",service="cloudflare-docker-proxy"`
+    );
+  }
+  return new Response(JSON.stringify({ message: "UNAUTHORIZED" }), {
+    status: 401,
+    headers: headers,
+  });
 }
