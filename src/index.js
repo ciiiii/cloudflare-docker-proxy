@@ -32,6 +32,9 @@ function routeByHosts(host) {
 
 async function handleRequest(request) {
   const url = new URL(request.url);
+  if (url.pathname == "/") {
+    return Response.redirect(url.protocol + "//" + url.host + "/v2/", 301);
+  }
   const upstream = routeByHosts(url.hostname);
   if (upstream === "") {
     return new Response(
@@ -154,7 +157,7 @@ async function fetchToken(wwwAuthenticate, scope, authorization) {
 }
 
 function responseUnauthorized(url) {
-  const headers = new(Headers);
+  const headers = new Headers();
   if (MODE == "debug") {
     headers.set(
       "Www-Authenticate",
