@@ -1,7 +1,9 @@
 # cloudflare-docker-proxy
 
-We are currently observing frequent 429 Too Many Requests errors when this proxy accesses Docker Hub via Cloudflare Worker IP ranges.
-The root cause is still under investigation, but this issue may lead to unstable pulls or unexpected failures.
+> ### ⚠️ **Important Notice**
+> <span style="color:#d73a49;font-weight:bold">Docker Hub is rate-limiting Cloudflare Worker IPs, causing frequent <code>429</code> errors.</span>  
+> <span style="color:#d73a49;font-weight:bold">This project is currently NOT recommended for production use.</span>
+
 
 Due to the current instability, this project is not recommended for production use.
 We will provide updates as soon as more information becomes available.
